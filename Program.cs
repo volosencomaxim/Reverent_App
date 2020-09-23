@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Reverent_App.Controllers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,13 @@ namespace Reverent_App
     {
         static void Main(string[] args)
         {
+            BurlacuController test = new BurlacuController();
+
+
+            test.GetRequest();
+            //test.TestFunctionals();
+
+            Console.ReadLine();
         }
     }
 }
