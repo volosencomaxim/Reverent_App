@@ -15,7 +15,7 @@ namespace Reverent_App
 
 
             test.GetRequest();
-            //test.TestFunctionals();
+            //test.HomeRoute();
 
             Console.ReadLine();
         }

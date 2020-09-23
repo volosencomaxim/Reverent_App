@@ -15,6 +15,7 @@ namespace Reverent_App.Controllers
     class BurlacuController
     {
         string staringURL;
+        string accessToken;
 
 
         ExtractService extractService;
@@ -25,49 +26,51 @@ namespace Reverent_App.Controllers
         {
             staringURL = Global.AppSetUp.RootURL + "/register";
             extractService = new ExtractService();
-
-            dataConrainer = extractService.GetRequest(staringURL);            
+            
+            dataConrainer = extractService.GetRequest(staringURL);
+            accessToken = dataConrainer["access_token"].ToString();
         }
-        public void TestFunctionals()
+        public JObject HomeRoute()
         {
 
-            string token = dataConrainer["access_token"].ToString();
-            string nextLink = dataConrainer["link"].ToString();
+            string nextLink = Global.AppSetUp.RootURL + dataConrainer["link"].ToString();
 
+            var firstJson = extractService.GetRequest(nextLink, accessToken);
 
-
-            Console.WriteLine(token);
-            Console.WriteLine(nextLink);
+            return firstJson;
+            //Console.WriteLine(token);
+            //Console.WriteLine(nextLink);
 
         }
 
         public void GetRequest()
         {
 
-            string secondURL = Global.AppSetUp.RootURL + "/route/1";
-            string newURL = Global.AppSetUp.RootURL + dataConrainer["link"].ToString();
+            //string secondURL = Global.AppSetUp.RootURL + "/route/1";
+            //string newURL = Global.AppSetUp.RootURL + dataConrainer["link"].ToString();
 
 
-            string accessToken = dataConrainer["access_token"].ToString();
+            //string accessToken = dataConrainer["access_token"].ToString();
 
-            var entireJson = extractService.GetRequest(secondURL, accessToken);
+            //var entireJson = extractService.GetRequest(secondURL, accessToken);
 
+            var entireJson = HomeRoute();
 
-            Console.WriteLine(entireJson);
+            //Console.WriteLine(entireJson);
 
-            if (entireJson["data"] != null)
-            {
-                Console.WriteLine(entireJson["data"]);
-            }
+            //if (entireJson["data"] != null)
+            //{
+            //    Console.WriteLine(entireJson["data"]);
+            //}
 
-            if (entireJson["mime_type"] != null)
-            {
-                Console.WriteLine(entireJson["mime_type"]);
-            }
-            if (entireJson["data"] != null && entireJson["mime_type"] == null)
-            {
-                Console.WriteLine("Data is of string type!!");
-            }
+            //if (entireJson["mime_type"] != null)
+            //{
+            //    Console.WriteLine(entireJson["mime_type"]);
+            //}
+            //if (entireJson["data"] != null && entireJson["mime_type"] == null)
+            //{
+            //    Console.WriteLine("Data is of string type!!");
+            //}
 
             if (entireJson["link"] != null)
             {
@@ -83,5 +86,7 @@ namespace Reverent_App.Controllers
    
             Console.WriteLine("\n\nFinish");
         }
+
+        
     }
 }
