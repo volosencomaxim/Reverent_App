@@ -92,7 +92,7 @@ namespace Reverent_App.Controllers
             //{
             //    Console.WriteLine(entireJson["mime_type"]);
             //}
-            if (entireJson["mime_type"] != null && entireJson["data"] == null)
+            if (entireJson["mime_type"] == null && entireJson["data"] != null)
             {
                 Console.WriteLine("text/String : {\n" + entireJson["data"].ToString() + "\n}");
             }
