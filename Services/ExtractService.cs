@@ -16,7 +16,9 @@ namespace Reverent_App.Services
     {
 
         public JObject GetRequest(string rootURL, string dataContainer = null)
-        {  
+        {
+
+            //Console.WriteLine(rootURL);
             var webClient = new WebClient();
 
             if (dataContainer != null)
