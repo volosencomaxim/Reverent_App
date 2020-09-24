@@ -14,8 +14,8 @@ namespace Reverent_App
             BurlacuController test = new BurlacuController();
 
 
-            test.GetRequest();
-            //test.TestFunctionals();
+            test.StartRouting();
+            //test.HomeRoute();
 
             Console.ReadLine();
         }
