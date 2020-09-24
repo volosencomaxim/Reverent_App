@@ -15,47 +15,32 @@ namespace Reverent_App.Controllers
 {
     class BurlacuController
     {
-        string rootURL;
-        string accessToken;
+        private string _rootURL;
+        private string _accessToken;
+        private string _homePath;
 
-
-        ExtractService extractService;
-        JObject dataConrainer;
-
+        private ExtractService _extractService;
 
         public BurlacuController()
         {
-            rootURL = Global.AppSetUp.RootURL + "/register";
-            extractService = new ExtractService();
-            
-            dataConrainer = extractService.GetRequest(rootURL);
-            accessToken = dataConrainer["access_token"].ToString();
+            _rootURL = Global.AppSetUp.RootURL;
+            _extractService = new ExtractService();
+
+            GetAccesToken();
         }
-        public JObject HomeRoute()
+
+
+        public void StartRouting()
         {
+            string homeLink = _rootURL + _homePath;
 
-            string nextLink = Global.AppSetUp.RootURL + dataConrainer["link"].ToString();
+            var firstJson = _extractService.GetRequest(homeLink, _accessToken);
 
-            var firstJson = extractService.GetRequest(nextLink, accessToken);
-
-            return firstJson;
-        }
-
-
-        public void DemoStart()
-        {
-
-            string nextLink = Global.AppSetUp.RootURL + dataConrainer["link"].ToString();
-
-            var firstJson = extractService.GetRequest(nextLink, accessToken);
-
-            GetRequest(firstJson);
-            //Console.WriteLine(token);
-            //Console.WriteLine(nextLink);
+            LinkRouting(firstJson);
 
         }
 
-        public void GetRequest(JObject entireJson)
+        public void LinkRouting(JObject entireJson)
         {
 
             if (entireJson["link"] != null)
@@ -64,23 +49,17 @@ namespace Reverent_App.Controllers
 
                 foreach (JProperty property in linkJson.Properties())
                 {
-                    string nextLink = Global.AppSetUp.RootURL + property.Value;
+                    string routeLink = _rootURL + property.Value;
 
-                    //Console.WriteLine(nextLink);
-
-                    ThreadPool.QueueUserWorkItem(state => Checker(nextLink, accessToken));
+                    ThreadPool.QueueUserWorkItem(state => Checker(routeLink, _accessToken));
                 }
             }
-
-
-   
-            //Console.WriteLine("\n\nFinish");
         }
 
         public void Checker(string nextLink, string accessToken)
         {
 
-            var entireJson = extractService.GetRequest(nextLink, accessToken);
+            var entireJson = _extractService.GetRequest(nextLink, accessToken);
             Console.WriteLine("  LINK  :  " + nextLink);
 
             if (entireJson["mime_type"] != null && entireJson["data"] != null)
@@ -88,18 +67,30 @@ namespace Reverent_App.Controllers
                 Console.WriteLine(entireJson["mime_type"].ToString() + " : {\n" +  entireJson["data"].ToString() + "\n}");
             }
 
-            //if (entireJson["mime_type"] != null)
-            //{
-            //    Console.WriteLine(entireJson["mime_type"]);
-            //}
             if (entireJson["mime_type"] == null && entireJson["data"] != null)
             {
-                Console.WriteLine("text/String : {\n" + entireJson["data"].ToString() + "\n}");
+                Console.WriteLine("text/string : {\n" + entireJson["data"].ToString() + "\n}");
             }
 
             if (entireJson["link"] != null)
-                GetRequest(entireJson);
+                LinkRouting(entireJson);
             
+        }
+
+        private void GetAccesToken()
+        {
+            string _registerURL;
+            string _registerPath;
+            JObject _dataContainer;
+
+            _dataContainer = _extractService.GetRequest(_rootURL);
+            _registerPath = _dataContainer["register"]["link"].ToString();  
+
+            _registerURL = _rootURL + _registerPath;
+            _dataContainer = _extractService.GetRequest(_registerURL);
+
+            _accessToken = _dataContainer["access_token"].ToString();
+            _homePath = _dataContainer["link"].ToString();
         }
 
     }
