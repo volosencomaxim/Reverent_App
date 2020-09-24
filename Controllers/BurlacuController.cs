@@ -44,7 +44,7 @@ namespace Reverent_App.Controllers
         public void GetRequest()
         {
 
-            string secondURL = Global.AppSetUp.RootURL + "/route/1";
+            string secondURL = Global.AppSetUp.RootURL + "/route/3";
             string newURL = Global.AppSetUp.RootURL + dataConrainer["link"].ToString();
 
 
