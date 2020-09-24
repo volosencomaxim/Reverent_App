@@ -74,14 +74,14 @@ namespace Reverent_App.Controllers
 
 
    
-            Console.WriteLine("\n\nFinish");
+            //Console.WriteLine("\n\nFinish");
         }
 
         public void Checker(string nextLink, string accessToken)
         {
 
             var entireJson = extractService.GetRequest(nextLink, accessToken);
-            //Console.WriteLine(entireJson);
+            Console.WriteLine("  LINK  :  " + nextLink);
 
             if (entireJson["mime_type"] != null && entireJson["data"] != null)
             {
