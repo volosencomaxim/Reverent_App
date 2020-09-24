@@ -43,9 +43,11 @@ namespace Reverent_App.Controllers
         public void LinkRouting(JObject entireJson)
         {
 
+
             if (entireJson["link"] != null)
             {
                 var linkJson = JObject.Parse(entireJson["link"].ToString());
+
 
                 foreach (JProperty property in linkJson.Properties())
                 {
