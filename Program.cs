@@ -1,4 +1,5 @@
 ﻿using Reverent_App.Controllers;
+using Reverent_App.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,13 @@ namespace Reverent_App
     {
         static void Main(string[] args)
         {
-            BurlacuController test = new BurlacuController();
+            RoutingController test = new RoutingController();
+            ExtractService data = new ExtractService();
 
 
             test.StartRouting();
             //test.HomeRoute();
+            //data.ShowRezult();
 
             Console.ReadLine();
         }
