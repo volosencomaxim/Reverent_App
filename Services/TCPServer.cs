@@ -28,7 +28,7 @@ namespace Reverent_App.Services
             listener.Start();
             while (true)
             {
-                Console.WriteLine("Waiting for a connection.");
+                Console.WriteLine("Server is ready. Waiting for a connection.");
                 //Console.WriteLine(data);
                 client = listener.AcceptTcpClient();
                 Console.WriteLine("Client accepted.");

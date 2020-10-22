@@ -14,7 +14,7 @@ namespace Reverent_App
         {
 
             var rout = new RoutingController();
-            Console.WriteLine("Wait about 10 seconds :D");
+            Console.WriteLine("The application extracts the information, please wait.");
             rout.StartRouting();
         }
     }
