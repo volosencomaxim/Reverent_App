@@ -10,14 +10,14 @@ namespace Reverent_App.Services
     class SearchService
     {
 
-        private List<string> dataContainer;
+        private string dataContainer;
         public SearchService()
         {
-            dataContainer = new List<string>();
+            dataContainer = "";
         }
 
 
-        public List<string> CommandController(JArray jsonObject, string command)
+        public string CommandController(JArray jsonObject, string command)
         {
 
             List<string> commandContainer = new List<string>(
@@ -29,26 +29,26 @@ namespace Reverent_App.Services
 
             commandContainer.Clear();
             commandContainer.Add("Wrong command, try again.");
-            return commandContainer;
+            return commandContainer[0];
         }
-        private List<string> SelectColumn(JArray jsonObject, string str)
+        private string SelectColumn(JArray jsonObject, string str)
         {
             var smth = jsonObject.Where(x => x is JObject y && y.ContainsKey(str)).ToArray();
 
             foreach (var a in smth)
             {
-                dataContainer.Add(a[str].ToString());
+                dataContainer += a[str].ToString() + " ";
             }
             return dataContainer;
         }
 
-        private List<string> SelectColumnWithData(JArray jsonObject, string str)
+        private string SelectColumnWithData(JArray jsonObject, string str)
         {
             var smth = jsonObject.Where(x => x is JObject y && y.ContainsKey(str)).ToArray();
 
             foreach (var a in smth)
             {
-                dataContainer.Add(a.ToString());
+                dataContainer += a.ToString() + " ";
             }
             return dataContainer;
         }

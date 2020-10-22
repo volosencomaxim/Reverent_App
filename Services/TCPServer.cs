@@ -48,15 +48,10 @@ namespace Reverent_App.Services
                         }
                     }
                     string request = Encoding.UTF8.GetString(buffer, 0, recv);
-                    //Console.WriteLine("request received");
-                    var dataList = _searchService.CommandController(data, request);
-                    //foreach (var dataItem in dataList)
-                    //{
-                    //    sw.WriteLine(dataItem);
 
-                    //}
-                    sw.WriteLine("sdasfdasda");
-                    sw.WriteLine("sadasda");
+                    var dataString = _searchService.CommandController(data, request);
+  
+                    sw.WriteLine(dataString);
                     sw.Flush();
                 }
                 catch (Exception e)
