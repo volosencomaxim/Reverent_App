@@ -55,27 +55,19 @@ namespace Reverent_App.Controllers
 
         List<int> list = new List<int>();
         //int counter = -1;
-        //int index = 0;
+        int index = 0;
 
         private void LinkRouting(JObject entireJson)
         {
             var linkJson = JObject.Parse(entireJson["link"].ToString());
 
-            int toProcess = 10;
-
             using (ManualResetEvent resetEvent = new ManualResetEvent(false))
             {
-                //for (int i = index; i < linkJson.Count + index; i++)
-                //{
-                //    list.Add(i);
-                //}
-                //index += linkJson.Count;
-
-                //foreach (var item in list)
-                //{
-                //    Console.WriteLine(item);
-                //}
-                for (int i = 0; i < linkJson.Count; i++) list.Add(i);
+                for (int i = index; i < linkJson.Count + index; i++)
+                {
+                    list.Add(i);
+                }
+                index += linkJson.Count;
 
                 int counter = -1;
 
@@ -86,19 +78,26 @@ namespace Reverent_App.Controllers
                     ThreadPool.QueueUserWorkItem(new WaitCallback(state =>
                     {
                         DataExtractor(routeLink, _accessToken);
-                        if (Interlocked.Decrement(ref toProcess) == 0)
+                        //Console.WriteLine(index);
+
+                        if (Interlocked.Decrement(ref index) == 0)
+                        {
                             resetEvent.Set();
+                        }
+                        if (index == 3)
+                            index -= 2;
+                        Console.WriteLine("after decrement" + index.ToString());
+                        Console.WriteLine(list[counter]);
                     }), list[counter]);
                 }
 
                 resetEvent.WaitOne();
             }
-            ///
 
+            Console.WriteLine("\n\n\n Done");
             //_extractService.ShowRezult();
-            Console.WriteLine("\n\n\nDone\n\n\n");
-
         }
+
 
         private void DataExtractor(string nextLink, string accessToken)
         {
@@ -110,7 +109,7 @@ namespace Reverent_App.Controllers
                 if (entireJson["mime_type"] != null)
                     _extractService.DataFilter(entireJson["mime_type"].ToString(), entireJson["data"].ToString());                
                 else
-                    _extractService.DataFilter("text/string", entireJson["data"].ToString());                                
+                    _extractService.DataFilter("text/string", entireJson["data"].ToString());
             }
 
             if (entireJson["link"] != null)

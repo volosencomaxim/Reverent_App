@@ -47,31 +47,41 @@ namespace Reverent_App.Services
             //Console.WriteLine(key + "   :    " + value);
 
             if (key == "text/csv")
-            {
-                localS = dataParser.CSVToJson(value);
-                StoredString += localS + ",";
-            }
+                StoredString += dataParser.CSVToJson(value) + ",";
+
             if (key == "text/string")
-            {
-                localS = dataParser.AdaptString(value);
-                StoredString += localS + ",";
-            }
+                StoredString += dataParser.AdaptString(value) + ",";
+
             if (key == "application/x-yaml")
-            {
-                localS = dataParser.XYAMToJson(value);
-                StoredString += localS + ",";
-            }
+                StoredString += dataParser.XYAMToJson(value) + ",";
+
             if (key == "application/xml")
-            {
-                localS = dataParser.XMLToJson(value);
-                StoredString += localS + ",";
-            }
-            //Console.WriteLine(StoredString + "\n\n\n LAST ONE   ");
+                StoredString += dataParser.XMLToJson(value) + ",";
+
         }
 
+        private JArray ConvertDataToJArray()
+        {
+            var x = StoredString[StoredString.Length - 1];
+
+            if (Equals(x , ','))
+            {
+                StoredString = StoredString.Remove(StoredString.Length - 1);
+                return ConvertDataToJArray();
+            }
+            else
+            {
+                string arrayTypeString = $"[{StoredString}]";
+                var jsonArray = JArray.Parse(arrayTypeString);
+                return jsonArray;
+            }
+        }
         public void ShowRezult()
         {
             Console.WriteLine(StoredString);
+
+            var smth = ConvertDataToJArray();
+            Console.WriteLine(smth);
         }
     }
 }

@@ -67,13 +67,12 @@ namespace Reverent_App.Services
         {
             var xyam = dataSet.Split('\n');
 
-
             List<string[]> temp = new List<string[]>();
             foreach (var item in xyam)
             {
                 if (item == null || item == "\n" || item == "" || item == "\r")
                     continue;
-                var chategories = item.Split(',');
+                var chategories = item.Split(':');
                 temp.Add(chategories);
             }
 
