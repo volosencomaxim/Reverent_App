@@ -43,9 +43,6 @@ namespace Reverent_App.Services
         {
             string localS = "";
 
-
-            //Console.WriteLine(key + "   :    " + value);
-
             if (key == "text/csv")
                 StoredString += dataParser.CSVToJson(value) + ",";
 
@@ -71,17 +68,16 @@ namespace Reverent_App.Services
             }
             else
             {
-                string arrayTypeString = $"[{StoredString}]";
-                var jsonArray = JArray.Parse(arrayTypeString);
+                StoredString = $"[{StoredString}]";
+                var jsonArray = JArray.Parse(StoredString);
                 return jsonArray;
             }
         }
-        public void ShowRezult()
+        public void RefactoredJsonData()
         {
-            Console.WriteLine(StoredString);
-
-            var smth = ConvertDataToJArray();
-            Console.WriteLine(smth);
+            var jsonData = ConvertDataToJArray();
+            Console.WriteLine(jsonData);
+            //return jsonData;
         }
     }
 }

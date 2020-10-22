@@ -55,7 +55,7 @@ namespace Reverent_App.Controllers
 
         List<int> list = new List<int>();
         //int counter = -1;
-        int index = 0;
+        int index = 8;
 
         private void LinkRouting(JObject entireJson)
         {
@@ -67,8 +67,6 @@ namespace Reverent_App.Controllers
                 {
                     list.Add(i);
                 }
-                index += linkJson.Count;
-
                 int counter = -1;
 
                 foreach (JProperty property in linkJson.Properties())
@@ -78,24 +76,19 @@ namespace Reverent_App.Controllers
                     ThreadPool.QueueUserWorkItem(new WaitCallback(state =>
                     {
                         DataExtractor(routeLink, _accessToken);
-                        //Console.WriteLine(index);
 
-                        if (Interlocked.Decrement(ref index) == 0)
-                        {
+                        if (Interlocked.Decrement(ref index) == 0)                        
                             resetEvent.Set();
-                        }
-                        if (index == 3)
-                            index -= 2;
-                        Console.WriteLine("after decrement" + index.ToString());
-                        Console.WriteLine(list[counter]);
+                        
+                        //Console.WriteLine("after decrement" + index.ToString());
                     }), list[counter]);
                 }
 
                 resetEvent.WaitOne();
             }
 
-            Console.WriteLine("\n\n\n Done");
-            //_extractService.ShowRezult();
+            //Console.WriteLine("\n\n\n Done");
+            _extractService.RefactoredJsonData();
         }
 
 
