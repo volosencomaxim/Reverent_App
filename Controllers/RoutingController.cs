@@ -10,6 +10,7 @@ using Reverent_App.Services;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
 using System.Threading;
+using System.Diagnostics;
 
 namespace Reverent_App.Controllers
 {
@@ -20,11 +21,14 @@ namespace Reverent_App.Controllers
         private string _homePath;
 
         private ExtractService _extractService;
+        private TCPServer _connection;
+
 
         public RoutingController()
         {
             _rootURL = Global.AppSetUp.RootURL;
             _extractService = new ExtractService();
+            _connection = new TCPServer();
 
             GetAccesToken();
         }
@@ -53,46 +57,37 @@ namespace Reverent_App.Controllers
         }
 
 
-        List<int> list = new List<int>();
-        //int counter = -1;
         int index = 8;
-
         private void LinkRouting(JObject entireJson)
         {
             var linkJson = JObject.Parse(entireJson["link"].ToString());
 
             using (ManualResetEvent resetEvent = new ManualResetEvent(false))
             {
-                for (int i = index; i < linkJson.Count + index; i++)
-                {
-                    list.Add(i);
-                }
-                int counter = -1;
 
                 foreach (JProperty property in linkJson.Properties())
                 {
-                    counter += 1;
                     string routeLink = _rootURL + property.Value;
-                    ThreadPool.QueueUserWorkItem(new WaitCallback(state =>
+
+                    ThreadPool.QueueUserWorkItem(state =>
                     {
                         DataExtractor(routeLink, _accessToken);
 
-                        if (Interlocked.Decrement(ref index) == 0)                        
+                        if (Interlocked.Decrement(ref index) == 0)
                             resetEvent.Set();
-                        
-                        //Console.WriteLine("after decrement" + index.ToString());
-                    }), list[counter]);
-                }
 
+                    });
+                }
                 resetEvent.WaitOne();
             }
 
-            //Console.WriteLine("\n\n\n Done");
-            _extractService.RefactoredJsonData();
+            var structuredData = _extractService.RefactoredJsonData();
+            _connection.StartServer(structuredData);
         }
 
 
-        private void DataExtractor(string nextLink, string accessToken)
+
+    private void DataExtractor(string nextLink, string accessToken)
         {
 
             var entireJson = _extractService.GetRequest(nextLink, accessToken);

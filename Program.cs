@@ -12,15 +12,10 @@ namespace Reverent_App
     {
         static void Main(string[] args)
         {
-            RoutingController test = new RoutingController();
-            ExtractService data = new ExtractService();
 
-
-            test.StartRouting();
-            //test.HomeRoute();
-            //data.ShowRezult();
-
-            Console.ReadLine();
+            var rout = new RoutingController();
+            Console.WriteLine("Wait about 10 seconds :D");
+            rout.StartRouting();
         }
     }
 }

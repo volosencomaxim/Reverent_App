@@ -17,6 +17,7 @@ namespace Reverent_App.Services
 
         private string StoredString;
         private DataParser dataParser;
+        
 
         public ExtractService()
         {
@@ -28,14 +29,21 @@ namespace Reverent_App.Services
         {
             var webClient = new WebClient();
 
-            Console.WriteLine(rootURL);
+            //Console.WriteLine(rootURL);
 
             if (dataContainer != null)
                 webClient.Headers.Add("X-Access-Token", dataContainer);
-            
-            var jsonString = webClient.DownloadString(rootURL);
-            var entireJson = JObject.Parse(jsonString);
 
+            var entireJson = new JObject();
+            try
+            {
+                var jsonString = webClient.DownloadString(rootURL);
+                entireJson = JObject.Parse(jsonString);
+                return entireJson;
+            }
+            catch (Exception e)
+            {
+            }
             return entireJson;
         }
 
@@ -73,11 +81,11 @@ namespace Reverent_App.Services
                 return jsonArray;
             }
         }
-        public void RefactoredJsonData()
+        public JArray RefactoredJsonData()
         {
             var jsonData = ConvertDataToJArray();
-            Console.WriteLine(jsonData);
-            //return jsonData;
+            //Console.WriteLine(jsonData);
+            return jsonData;
         }
     }
 }
